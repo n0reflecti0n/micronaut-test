@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema and tables creation
+      author: rtyapaev
+      changes:
+        - sql: CREATE SCHEMA IF NOT EXISTS micronaut_test
+
+        - createTable:
+            schemaName: micronaut_test
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: msisdn
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: date_added
+                  type: timestamp
+                  constraints:
+                    nullable: false

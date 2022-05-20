@@ -1,0 +1,41 @@
+micronaut:
+  server:
+    port: 8085
+  application:
+    name: micronautTest
+  security:
+    authentication: bearer
+    token:
+      jwt:
+        signatures:
+          secret:
+            generator:
+              secret: '"${JWT_GENERATOR_SIGNATURE_SECRET:pleaseChangeThisSecretForANewOne}"'
+
+netty:
+  default:
+    allocator:
+      max-order: 3
+
+datasources:
+  default:
+    url: jdbc:postgresql://localhost:5432/test
+    username: postgres
+    password: postgres
+    dialect: POSTGRES
+    schema-generate: NONE
+    driverClassName: org.postgresql.Driver
+
+jpa:
+  default:
+    properties:
+      hibernate:
+        default_schema: micronaut_test
+        hbm2ddl:
+          auto: none
+
+
+liquibase:
+  datasources:
+    default:
+      change-log: classpath:database/changelog/liquibase-changelog.yml
