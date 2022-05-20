@@ -5,12 +5,37 @@ micronaut:
     name: micronautTest
   security:
     authentication: bearer
+    intercept-url-map:
+      - pattern: /**/swagger/**
+        httpMethod: GET
+        access:
+          - isAnonymous()
+      - pattern: /**/swagger-ui/**
+        httpMethod: GET
+        access:
+          - isAnonymous()
     token:
       jwt:
+        generator:
+          access-token:
+            expiration: 10
+          refresh-token:
+            secret: '"${JWT_GENERATOR_SIGNATURE_SECRET:pleaseChangeThisSecretForANewOne}"'
         signatures:
           secret:
             generator:
               secret: '"${JWT_GENERATOR_SIGNATURE_SECRET:pleaseChangeThisSecretForANewOne}"'
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /swagger/**
+      rapidoc:
+        paths: classpath:META-INF/swagger/views/rapidoc
+        mapping: /rapidoc/**
+      swagger-ui:
+        paths: classpath:META-INF/swagger/views/swagger-ui
+        mapping: /swagger-ui/**
 
 netty:
   default:
@@ -19,25 +44,27 @@ netty:
 
 datasources:
   default:
-    url: jdbc:postgresql://localhost:5432/test
+    url: jdbc:postgresql://localhost:5432/test?currentSchema=micronaut_test
     username: postgres
     password: postgres
     dialect: POSTGRES
     schema-generate: NONE
     driverClassName: org.postgresql.Driver
 
-jpa:
-  default:
-    properties:
-      hibernate:
-        default_schema: micronaut_test
-        hbm2ddl:
-          auto: none
+#r2dbc:
+#  datasources:
+#    default:
+#      url: r2dbc:postgresql://localhost:5432/test
+#      username: postgres
+#      password: postgres
+#      dialect: POSTGRES
+#      schema-generate: NONE
 
 liquibase:
   datasources:
     default:
       change-log: classpath:database/changelog/liquibase-changelog.yml
+      default-schema: public
 
 jackson:
   date-format: yyyy-MM-dd HH:mm:ss

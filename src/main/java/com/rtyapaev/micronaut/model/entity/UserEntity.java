@@ -1,23 +1,18 @@
 package com.rtyapaev.micronaut.model.entity;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.annotation.DateCreated;
-import lombok.Data;
+import io.micronaut.data.annotation.GeneratedValue;
+import io.micronaut.data.annotation.Id;
+import io.micronaut.data.annotation.MappedEntity;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
-@Entity
-@Table(name = "users", schema = "micronaut_test")
-public class UserEntity {
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    private String msisdn;
-
-    private String password;
-
-    @DateCreated
-    private LocalDateTime dateAdded;
+@MappedEntity(value = "user")
+public record UserEntity(
+        @Id @GeneratedValue @Nullable Long id,
+        String msisdn,
+        String password,
+        @DateCreated @Nullable LocalDateTime dateAdded
+) {
 }
