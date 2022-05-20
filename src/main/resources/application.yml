@@ -34,8 +34,10 @@ jpa:
         hbm2ddl:
           auto: none
 
-
 liquibase:
   datasources:
     default:
       change-log: classpath:database/changelog/liquibase-changelog.yml
+
+jackson:
+  date-format: yyyy-MM-dd HH:mm:ss
