@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @MappedEntity("refresh_token")
 public record RefreshTokenEntity(
         @Id @GeneratedValue @Nullable Long id,
-        String msisdn,
+        @MappedProperty UserEntity user,
         String refreshToken,
         Boolean revoked,
         @DateCreated @Nullable LocalDateTime dateAdded
