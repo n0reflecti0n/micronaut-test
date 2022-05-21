@@ -79,10 +79,6 @@
             <version>${lombok.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.reactivex.rxjava2</groupId>
-            <artifactId>rxjava</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.micronaut.security</groupId>
             <artifactId>micronaut-security</artifactId>
             <version>3.5.0</version>
@@ -126,21 +122,25 @@
             <groupId>io.micronaut.openapi</groupId>
             <artifactId>micronaut-openapi</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.micronaut.data</groupId>
-            <artifactId>micronaut-data-jdbc</artifactId>
-            <scope>compile</scope>
-        </dependency>
 <!--        <dependency>-->
 <!--            <groupId>io.micronaut.data</groupId>-->
-<!--            <artifactId>micronaut-data-r2dbc</artifactId>-->
+<!--            <artifactId>micronaut-data-jdbc</artifactId>-->
 <!--            <scope>compile</scope>-->
 <!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>io.r2dbc</groupId>-->
-<!--            <artifactId>r2dbc-postgresql</artifactId>-->
-<!--            <scope>runtime</scope>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>io.micronaut.data</groupId>
+            <artifactId>micronaut-data-r2dbc</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.r2dbc</groupId>
+            <artifactId>r2dbc-postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.micronaut</groupId>
+            <artifactId>micronaut-management</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

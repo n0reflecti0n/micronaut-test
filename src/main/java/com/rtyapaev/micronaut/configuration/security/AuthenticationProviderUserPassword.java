@@ -36,10 +36,10 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
         final var password = (String) authenticationRequest.getSecret();
 
         userService.getUserByMsisdn(msisdn)
-                .ifPresentOrElse(
+                .subscribe(
                         userEntity -> validatePassword(emitter, userEntity, password),
-                        () -> {
-                            log.error("User with msisdn: {} not found", msisdn);
+                        (throwable) -> {
+                            log.error(throwable.getMessage());
                             emitter.error(AuthenticationResponse.exception());
                         }
                 );

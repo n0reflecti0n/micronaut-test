@@ -1,14 +1,12 @@
 package com.rtyapaev.micronaut.repository;
 
 import com.rtyapaev.micronaut.model.entity.RefreshTokenEntity;
-import com.rtyapaev.micronaut.model.entity.UserEntity;
-import io.micronaut.data.annotation.Join;
-import io.micronaut.data.jdbc.annotation.JdbcRepository;
+import io.micronaut.data.r2dbc.annotation.R2dbcRepository;
 import io.micronaut.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-@JdbcRepository
+@R2dbcRepository
 public interface RefreshTokenRepository extends CrudRepository<RefreshTokenEntity, Long> {
     RefreshTokenEntity save(String msisdn, String refreshToken, Boolean revoked);
 
