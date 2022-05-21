@@ -19,17 +19,13 @@ import static io.micronaut.security.errors.IssuingAnAccessTokenErrorCode.INVALID
 @RequiredArgsConstructor
 public class CustomRefreshTokenPersistence implements RefreshTokenPersistence {
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserService userService;
 
     @Override
     public void persistToken(RefreshTokenGeneratedEvent event) {
         if (event != null && event.getRefreshToken() != null && event.getAuthentication() != null) {
             final var msisdn = event.getAuthentication().getName();
             if (msisdn != null) {
-                userService.getUserByMsisdn(msisdn)
-                        .ifPresent(userEntity ->
-                                refreshTokenRepository.save(userEntity, event.getRefreshToken(), false)
-                        );
+                refreshTokenRepository.save(msisdn, event.getRefreshToken(), false);
             }
         }
     }
@@ -53,7 +49,7 @@ public class CustomRefreshTokenPersistence implements RefreshTokenPersistence {
         if (token.revoked()) {
             emitter.error(new OauthErrorResponseException(INVALID_GRANT, "refresh token revoked", null));
         } else {
-            emitter.next(Authentication.build(token.user().msisdn()));
+            emitter.next(Authentication.build(token.msisdn()));
             emitter.complete();
         }
     }

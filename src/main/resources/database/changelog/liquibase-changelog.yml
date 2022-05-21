@@ -53,8 +53,10 @@ databaseChangeLog:
                     nullable: false
 
               - column:
-                  name: user_id
-                  type: bigint
+                  name: msisdn
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
 
               - column:
                   name: refresh_token
@@ -73,12 +75,3 @@ databaseChangeLog:
                   type: timestamp
                   constraints:
                     nullable: false
-
-        - addForeignKeyConstraint:
-            constraintName: fk_refresh_token_user_id
-            baseTableSchemaName: micronaut_test
-            referencedTableSchemaName: micronaut_test
-            baseTableName: refresh_token
-            baseColumnNames: user_id
-            referencedTableName: user
-            referencedColumnNames: id

@@ -15,11 +15,11 @@ import java.util.Optional;
 
 @Slf4j
 @Controller("/user")
-@Secured(SecurityRule.IS_ANONYMOUS)
 @RequiredArgsConstructor
 public class UserController {
     public final UserService userService;
 
+    @Secured(SecurityRule.IS_ANONYMOUS)
     @Get
     public Optional<UserEntity> getUser(@Parameter String msisdn) {
         final var user = userService.getUserByMsisdn(msisdn);
@@ -27,6 +27,7 @@ public class UserController {
         return user;
     }
 
+    @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post
     public UserEntity saveUser(@Parameter String msisdn,
                                @Parameter String password) {
