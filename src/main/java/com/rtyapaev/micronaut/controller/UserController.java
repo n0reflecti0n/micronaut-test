@@ -25,7 +25,9 @@ public class UserController {
     @Secured(SecurityRule.IS_ANONYMOUS)
     @Get
     public Mono<UserEntity> getUser(@Parameter String msisdn) {
-        return userService.getUserByMsisdn(msisdn);
+        return userService.getUserByMsisdn(msisdn)
+                .doOnNext(userEntity -> log.info("User: {}", userEntity))
+                .switchIfEmpty(Mono.fromRunnable(() -> log.info("User not found")));
     }
 
     @Secured(SecurityRule.IS_ANONYMOUS)
