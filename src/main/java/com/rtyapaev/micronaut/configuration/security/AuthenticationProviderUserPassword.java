@@ -14,6 +14,8 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
+import java.util.Optional;
+
 @Slf4j
 @Singleton
 @RequiredArgsConstructor
@@ -35,13 +37,10 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
         final var msisdn = (String) authenticationRequest.getIdentity();
         final var password = (String) authenticationRequest.getSecret();
 
-        userService.getUserByMsisdn(msisdn)
-                .subscribe(
+        Optional.ofNullable(userService.getUserByMsisdn(msisdn).block())
+                .ifPresentOrElse(
                         userEntity -> validatePassword(emitter, userEntity, password),
-                        (throwable) -> {
-                            log.error(throwable.getMessage());
-                            emitter.error(AuthenticationResponse.exception());
-                        }
+                        () -> emitter.error(AuthenticationResponse.exception())
                 );
     }
 
