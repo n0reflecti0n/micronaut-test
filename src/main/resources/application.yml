@@ -48,12 +48,13 @@ netty:
 
 datasources:
   default:
-    url: jdbc:postgresql://localhost:5432/test?currentSchema=micronaut_test
+    url: jdbc:postgresql://localhost:5432/test
     username: postgres
     password: postgres
     dialect: POSTGRES
     schema-generate: NONE
     driverClassName: org.postgresql.Driver
+    schema: micronaut_test
 
 r2dbc:
   datasources:

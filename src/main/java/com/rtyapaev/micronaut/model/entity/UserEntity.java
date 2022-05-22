@@ -7,7 +7,6 @@ import io.micronaut.data.annotation.*;
 import java.time.LocalDateTime;
 
 @MappedEntity("user")
-@Embeddable
 @Introspected
 public record UserEntity(
         @Id @GeneratedValue @Nullable Long id,
