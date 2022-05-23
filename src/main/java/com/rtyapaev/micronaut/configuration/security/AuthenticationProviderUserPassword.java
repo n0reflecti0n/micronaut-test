@@ -11,10 +11,7 @@ import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.FluxSink;
-
-import java.util.Optional;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @Singleton
@@ -25,36 +22,13 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
     @Override
     public Publisher<AuthenticationResponse> authenticate(@Nullable HttpRequest<?> httpRequest,
                                                           AuthenticationRequest<?, ?> authenticationRequest) {
-
-        return Flux.create(
-                emitter -> authorize(authenticationRequest, emitter),
-                FluxSink.OverflowStrategy.ERROR
-        );
-    }
-
-    private void authorize(AuthenticationRequest<?, ?> authenticationRequest,
-                           FluxSink<AuthenticationResponse> emitter) {
-        final var msisdn = (String) authenticationRequest.getIdentity();
-        final var password = (String) authenticationRequest.getSecret();
-
-        Optional.ofNullable(userService.getUserByMsisdn(msisdn).block())
-                .ifPresentOrElse(
-                        userEntity -> validatePassword(emitter, userEntity, password),
-                        () -> emitter.error(AuthenticationResponse.exception())
-                );
-    }
-
-    private void validatePassword(FluxSink<AuthenticationResponse> emitter,
-                                  UserEntity userEntity,
-                                  String password) {
-        final var msisdn = userEntity.msisdn();
-        if (userEntity.password().equals(password)) {
-            log.info("Msisdn: {} authentication successful", msisdn);
-            emitter.next(AuthenticationResponse.success(msisdn));
-            emitter.complete();
-        } else {
-            log.error("Msisdn: {} - wrong password", msisdn);
-            emitter.error(AuthenticationResponse.exception());
-        }
+        return Mono.just((String) authenticationRequest.getIdentity())
+                .flatMap(userService::getUserByMsisdn)
+                .switchIfEmpty(Mono.error(AuthenticationResponse.exception("User not found")))
+                .filter(userEntity -> userEntity.password().equals(authenticationRequest.getSecret()))
+                .map(UserEntity::msisdn)
+                .doOnNext(msisdn -> log.info("User: {} authentication successful", msisdn))
+                .map(AuthenticationResponse::success)
+                .switchIfEmpty(Mono.error(AuthenticationResponse.exception("Invalid password")));
     }
 }

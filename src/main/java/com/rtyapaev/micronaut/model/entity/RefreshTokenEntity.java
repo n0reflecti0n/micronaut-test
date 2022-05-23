@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Introspected
 public record RefreshTokenEntity(
         @Id @GeneratedValue @Nullable Long id,
-        @MappedProperty UserEntity user,
+        @Relation(value = Relation.Kind.ONE_TO_ONE) UserEntity user,
         String refreshToken,
         Boolean revoked,
         @DateCreated @Nullable LocalDateTime dateAdded
