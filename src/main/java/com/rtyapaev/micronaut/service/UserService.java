@@ -25,7 +25,7 @@ public class UserService {
 
     public Mono<UserEntity> saveUser(String msisdn, String password) {
         return getUserByMsisdn(msisdn)
-                .doOnNext(__ -> {throw new UserAlreadyExistsException(msisdn);})
+                .doOnNext(__ -> Mono.error(new UserAlreadyExistsException(msisdn)))
                 .switchIfEmpty(Mono.fromDirect(userRepository.save(msisdn, password)));
     }
 }

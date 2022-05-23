@@ -11,11 +11,11 @@ import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @Controller("/token")
+@Secured(SecurityRule.IS_AUTHENTICATED)
 @RequiredArgsConstructor
 public class RefreshTokenController {
     private final RefreshTokenService refreshTokenService;
 
-    @Secured(SecurityRule.IS_ANONYMOUS)
     @Get
     public Mono<RefreshTokenEntity> getRefreshToken(String msisdn) {
         return refreshTokenService.getByUserMsisdn(msisdn);
