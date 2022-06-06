@@ -4,7 +4,10 @@ import com.rtyapaev.micronaut.model.SubscriptionStatus;
 import com.rtyapaev.micronaut.model.entity.UserEntity;
 import com.rtyapaev.micronaut.service.UserService;
 import io.micronaut.context.annotation.Parameter;
-import io.micronaut.http.annotation.*;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.PathVariable;
+import io.micronaut.http.annotation.Post;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.security.annotation.Secured;
@@ -13,8 +16,6 @@ import io.micronaut.security.rules.SecurityRule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
-
-import java.security.Principal;
 
 @Slf4j
 @Controller("/user")
@@ -33,9 +34,9 @@ public class UserController {
 
     @Secured(SecurityRule.IS_ANONYMOUS)
     @Get("/{id}")
-    public UserEntity getUserById(@PathVariable Long id) {
+    public Mono<UserEntity> getUserById(@PathVariable Long id) {
         return Mono.from(userService.getUserById(id))
-                .block();
+                .switchIfEmpty(Mono.fromRunnable(() -> log.info("User with id: {} doesn't exist", id)));
     }
 
     @Secured(SecurityRule.IS_ANONYMOUS)
