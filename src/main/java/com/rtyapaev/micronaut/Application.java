@@ -24,6 +24,9 @@ public class Application {
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
 
-        Micronaut.run(Application.class, args);
+        Micronaut.build(args)
+                .eagerInitSingletons(true)
+                .mainClass(Application.class)
+                .start();
     }
 }
