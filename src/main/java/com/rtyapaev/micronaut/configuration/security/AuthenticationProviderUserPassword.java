@@ -11,6 +11,7 @@ import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -18,6 +19,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class AuthenticationProviderUserPassword implements AuthenticationProvider {
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Publisher<AuthenticationResponse> authenticate(@Nullable HttpRequest<?> httpRequest,
@@ -25,7 +27,7 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
         return Mono.just((String) authenticationRequest.getIdentity())
                 .flatMap(userService::getUserByMsisdn)
                 .switchIfEmpty(Mono.error(AuthenticationResponse.exception("User not found")))
-                .filter(userEntity -> userEntity.password().equals(authenticationRequest.getSecret()))
+                .filter(userEntity -> passwordEncoder.matches(authenticationRequest.getSecret().toString(), userEntity.password()))
                 .map(UserEntity::msisdn)
                 .doOnNext(msisdn -> log.info("User: {} authentication successful", msisdn))
                 .map(AuthenticationResponse::success)
