@@ -1,14 +1,14 @@
-## Micronaut 3.4.4 Documentation
+## Micronaut test application
 
-- [User Guide](https://docs.micronaut.io/3.4.4/guide/index.html)
-- [API Reference](https://docs.micronaut.io/3.4.4/api/index.html)
-- [Configuration Reference](https://docs.micronaut.io/3.4.4/guide/configurationreference.html)
-- [Micronaut Guides](https://guides.micronaut.io/index.html)
-
----
-
-## Feature http-client documentation
-
-- [Micronaut HTTP Client documentation](https://docs.micronaut.io/latest/guide/index.html#httpClient)
+Test project for studying the following practices:
+- javarx + reactor
+- reactive http server 
+- reactive repositories
+- micronaut kafka
+- micronaut data
 
 
+Requirements:
+- JDK 17+
+- Postgres on port 5432
+- Kafka on port 9092

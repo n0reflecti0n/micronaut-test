@@ -1,4 +1,4 @@
-package com.rtyapaev.micronaut;
+package com.rtyapaev.micronaut.configuration;
 
 import io.micronaut.context.annotation.Factory;
 import jakarta.inject.Singleton;
