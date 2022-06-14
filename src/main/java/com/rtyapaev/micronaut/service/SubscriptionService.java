@@ -48,7 +48,7 @@ public class SubscriptionService {
                         ? Mono.error(() -> new HttpStatusException(HttpStatus.CONFLICT, "subscription already has corresponding status"))
                         : Mono.just(subscriptionEntity))
                 .flatMap(subscriptionEntity -> updateSubscriptionEntity(subscriptionEntity, status))
-                .switchIfEmpty(Mono.defer(() -> createSubscription(user, subscriptionId, status).thenReturn(true)))
+                .switchIfEmpty(createSubscription(user, subscriptionId, status).thenReturn(true))
                 .then();
     }
 
