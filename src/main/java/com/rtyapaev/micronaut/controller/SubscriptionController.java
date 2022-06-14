@@ -4,10 +4,7 @@ import com.rtyapaev.micronaut.model.SubscriptionStatus;
 import com.rtyapaev.micronaut.model.dto.SubscriptionDto;
 import com.rtyapaev.micronaut.model.entity.SubscriptionEntity;
 import com.rtyapaev.micronaut.service.SubscriptionService;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.PathVariable;
-import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.*;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import lombok.RequiredArgsConstructor;
@@ -39,5 +36,12 @@ public class SubscriptionController {
         return Mono.just(principal)
                 .map(Principal::getName)
                 .flatMap(msisdn -> subscriptionService.updateSubscriptionStatus(msisdn, subscriptionId, SubscriptionStatus.ACTIVE));
+    }
+
+    @Post("/subscribe/all")
+    public Flux<SubscriptionEntity> subscribeAll(Principal principal) {
+        return Mono.just(principal)
+                .map(Principal::getName)
+                .flatMapMany(subscriptionService::subscribeAll);
     }
 }

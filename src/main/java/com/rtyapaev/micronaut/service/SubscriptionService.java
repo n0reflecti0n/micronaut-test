@@ -14,7 +14,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.file.attribute.UserPrincipalNotFoundException;
+import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 @Slf4j
 @Singleton
@@ -22,6 +25,8 @@ import java.util.Objects;
 public class SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
     private final UserService userService;
+
+    private final static Random random = new Random();
 
     public Flux<SubscriptionDto> getSubscriptions(String msisdn) {
         return subscriptionRepository.findByUserMsisdn(msisdn);
@@ -63,8 +68,24 @@ public class SubscriptionService {
                 .then(Mono.just(true));
     }
 
+    public Flux<SubscriptionEntity> subscribeAll(String msisdn) {
+        return userService.getUserByMsisdn(msisdn)
+                .switchIfEmpty(Mono.error(() -> new UserPrincipalNotFoundException("")))
+                .flatMapMany(this::subscribeAll);
+    }
+
     private Mono<SubscriptionEntity> createSubscription(UserEntity user, Long subscriptionId, SubscriptionStatus status) {
         return subscriptionRepository.save(subscriptionId, user, status)
                 .doOnNext(__ -> log.info("Created subscription {} for user: {} with status: {}", subscriptionId, user.msisdn(), status));
+    }
+
+    private Flux<SubscriptionEntity> subscribeAll(UserEntity user) {
+        return Flux.fromIterable(List.of(1L, 2L, 3L))
+                .flatMap(subId -> subscribeWithDelay(user, subId));
+    }
+
+    private Mono<SubscriptionEntity> subscribeWithDelay(UserEntity user, Long subscriptionId) {
+        return subscriptionRepository.save(subscriptionId, user, SubscriptionStatus.ACTIVE)
+                .delayElement(Duration.ofSeconds(random.nextInt(5, 11)));
     }
 }
