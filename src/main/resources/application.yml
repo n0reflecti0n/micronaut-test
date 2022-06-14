@@ -24,11 +24,11 @@ micronaut:
           access-token:
             expiration: 86400
           refresh-token:
-            secret: '"${JWT_GENERATOR_SIGNATURE_SECRET:pleaseChangeThisSecretForANewOne}"'
+            secret: 'D$+NP$3RsyTa#3XvD^Pa@2jaR&=-?Z=g'
         signatures:
           secret:
             generator:
-              secret: '"${JWT_GENERATOR_SIGNATURE_SECRET:pleaseChangeThisSecretForANewOne}"'
+              secret: 'egJGEy!DXxCGPb2g?Vpbjksw=75EvxnL'
   router:
     static-resources:
       swagger:

@@ -13,17 +13,26 @@ import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @Slf4j
 @Controller("/user")
-@ExecuteOn(TaskExecutors.IO)
+@Tag(name = "User controls")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
+    @Operation(summary = "Get user entity by msisdn")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
     @Secured(SecurityRule.IS_ANONYMOUS)
     @Get
     public Mono<UserEntity> getUser(@Parameter String msisdn) {
@@ -32,6 +41,11 @@ public class UserController {
                 .switchIfEmpty(Mono.fromRunnable(() -> log.info("User not found")));
     }
 
+    @Operation(summary = "Get user entity by id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
     @Secured(SecurityRule.IS_ANONYMOUS)
     @Get("/{id}")
     public Mono<UserEntity> getUserById(@PathVariable Long id) {
@@ -39,12 +53,20 @@ public class UserController {
                 .switchIfEmpty(Mono.fromRunnable(() -> log.info("User with id: {} doesn't exist", id)));
     }
 
+    @Operation(summary = "Add new user")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "409", description = "User with this msisdn already exists")
+
+    })
     @Secured(SecurityRule.IS_ANONYMOUS)
     @Post
     public Mono<UserEntity> saveUser(String msisdn, String password) {
         return userService.saveUser(msisdn, password);
     }
 
+    @Operation(summary = "Trigger subscription update via kafka")
+    @ApiResponses(@ApiResponse(responseCode = "200", description = "OK"))
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Post("/subscribe")
     public Mono<Void> updateSubscription(Authentication authentication,
