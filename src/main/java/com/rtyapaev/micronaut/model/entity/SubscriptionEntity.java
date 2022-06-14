@@ -14,7 +14,7 @@ public record SubscriptionEntity(
         @Id @GeneratedValue @Nullable Long id,
         Long subscriptionId,
         @TypeDef(type = DataType.STRING) SubscriptionStatus status,
-        @Relation(value = Relation.Kind.ONE_TO_ONE) UserEntity user,
+        @Relation(value = Relation.Kind.ONE_TO_ONE) @Nullable UserEntity user,
         @DateCreated @Nullable LocalDateTime dateAdded
 ) {
 }

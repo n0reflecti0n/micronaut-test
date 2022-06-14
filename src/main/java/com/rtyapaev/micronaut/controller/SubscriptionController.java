@@ -9,6 +9,7 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.security.Principal;
 
@@ -20,7 +21,13 @@ public class SubscriptionController {
 
     @Get
     public Flux<SubscriptionDto> getSubscriptions(Principal principal) {
-        final var msisdn = principal.getName();
-        return subscriptionService.getSubscriptions(msisdn);
+        return Mono.just(principal.getName())
+                .flatMapMany(subscriptionService::getSubscriptions);
+    }
+
+    @Get("/entities")
+    public Flux<SubscriptionEntity> getSubscriptionEntities(Principal principal) {
+        return Mono.just(principal.getName())
+                .flatMapMany(subscriptionService::getSubscriptionEntities);
     }
 }

@@ -1,5 +1,6 @@
 package com.rtyapaev.micronaut.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rtyapaev.micronaut.service.PasswordConverter;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.Nullable;
@@ -16,6 +17,6 @@ public record UserEntity(
         String msisdn,
         @TypeDef(type = DataType.STRING, converter = PasswordConverter.class) String password,
         @DateCreated @Nullable LocalDateTime dateAdded,
-        @Relation(value = Relation.Kind.ONE_TO_MANY) @Nullable List<SubscriptionEntity> subscriptions
+        @Relation(value = Relation.Kind.ONE_TO_MANY, mappedBy = "user") @Nullable @JsonIgnore List<SubscriptionEntity> subscriptions
 ) {
 }
