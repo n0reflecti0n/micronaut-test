@@ -82,3 +82,51 @@ databaseChangeLog:
             baseColumnNames: user_id
             referencedTableName: user
             referencedColumnNames: id
+
+
+  - changeSet:
+      id: subscription addition
+      author: rtyapaev
+      changes:
+        - createTable:
+            schemaName: micronaut_test
+            tableName: subscription
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: subscription_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: status
+                  type: varchar
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: user_id
+                  type: bigint
+
+              - column:
+                  name: date_added
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            constraintName: fk_subscription_user_id
+            baseTableSchemaName: micronaut_test
+            referencedTableSchemaName: micronaut_test
+            baseTableName: subscription
+            baseColumnNames: user_id
+            referencedTableName: user
+            referencedColumnNames: id
