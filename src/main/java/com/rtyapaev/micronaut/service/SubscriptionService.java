@@ -81,7 +81,8 @@ public class SubscriptionService {
 
     private Flux<SubscriptionEntity> subscribeAll(UserEntity user) {
         return Flux.fromIterable(List.of(1L, 2L, 3L))
-                .flatMap(subId -> subscribeWithDelay(user, subId));
+                .flatMap(subId -> subscribeWithDelay(user, subId))
+                .doOnNext(subscriptionEntity -> log.info("Subscription: {}", subscriptionEntity.subscriptionId()));
     }
 
     private Mono<SubscriptionEntity> subscribeWithDelay(UserEntity user, Long subscriptionId) {
